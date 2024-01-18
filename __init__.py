@@ -1,7 +1,7 @@
 import subprocess
 import unittest
 
-import case
+from . import case
 
 TIMEOUT = 3
 
@@ -19,7 +19,7 @@ def strip_prompt(stdout: str, sep: str=":") -> str:
 def invoke_script(input_: str, script: str="main.py") -> str:
     """Invoke main.py and return its output."""
     # linebreak needed to trigger python input
-    if not input.endswith("\n"):
+    if not input_.endswith("\n"):
         input_ += "\n"
     result: subprocess.CompletedProcess = subprocess.run(
         ["python", script],
