@@ -1,5 +1,6 @@
 import subprocess
 import unittest
+from typing import Any, Type
 
 from . import case
 
@@ -97,6 +98,27 @@ class TestFunction(unittest.TestCase):
                     result, test.ans,
                     msg=f"{test.callstr()} returned {result!r}, expected {test.ans!r}"
                 )
+
+
+class TestRecursion(unittest.TestCase):
+    """Test a recursive function"""
+    basecase: Any
+    testcases: list[case.FuncCall]
+    return_type: Type
+
+    def setUp(self):
+        raise AttributeError(
+            f"{self.__class__.__name__} must implement setUp() to set basecase, testcases, and return_type attributes"
+        )
+
+    def test_basecase(self):
+        pass
+
+    def test_recursion(self):
+        # Check recursive call
+        # Check converging input
+        # Check return type
+        pass
 
 
 
