@@ -6,6 +6,9 @@ from . import case
 TIMEOUT = 3
 
 
+class RuntimeError(Exception): ...
+
+
 def strip_prompt(stdout: str, sep: str=":") -> str:
     """Strip the prompt from stdout.
     The prompt is assumed to end with a separator character (default=":"),
@@ -29,6 +32,8 @@ def invoke_script(input_: str, script: str="main.py") -> str:
         timeout=TIMEOUT or 0,
     )
     stdout = result.stdout
+    if result.stderr:
+        raise RuntimeError(result.stderr)
     if not stdout or stdout.strip():
         return ""
     return strip_prompt(stdout) if ":" in stdout else stdout
