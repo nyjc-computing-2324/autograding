@@ -45,7 +45,7 @@ class TestInputOutput(unittest.TestCase):
 
     def setUp(self):
         raise AttributeError(
-            "{self.__class__.__name__} must implement setUp() to set testcases attribute"
+            f"{self.__class__.__name__} must implement setUp() to set testcases attribute"
         )
 
     def check_result(self, result: str, answer: str):
