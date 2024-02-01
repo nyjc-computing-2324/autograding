@@ -51,7 +51,7 @@ class TestInputOutput(unittest.TestCase):
     def check_result(self, result: str, answer: str):
         """Test the user's answer against the expected answer."""
         if answer != "":
-            self.assertNotEqual(result.strip(), "", msg="No output from program.")
+            self.assertNotEqual(result.strip(), "", msg="Error or no output from program.")
         self.assertIn(
             result,
             answer + "\n",
