@@ -34,7 +34,7 @@ def invoke_script(input_: str, script: str="main.py") -> str:
     stdout = result.stdout
     if result.stderr:
         raise RuntimeError(result.stderr)
-    if not stdout or stdout.strip():
+    if not (stdout or stdout.strip()):
         return ""
     return strip_prompt(stdout) if ":" in stdout else stdout
 
