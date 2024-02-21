@@ -7,6 +7,7 @@ class FuncCall(NamedTuple):
     func: Callable
     args: Sequence
     ans: Any
+    output: str
 
     def callstr(self) -> str:
         return (
