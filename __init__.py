@@ -1,4 +1,7 @@
+import io
 import subprocess
+import sys
+import typing
 import unittest
 
 from . import case
@@ -17,6 +20,15 @@ def strip_prompt(stdout: str, sep: str=":") -> str:
     if stdout.strip() and (sep in stdout):
         stdout = stdout[stdout.find(sep) + 1:].lstrip()
     return stdout
+
+
+def invoke_func(func: typing.Callable, args:typing.Sequence) -> tuple:
+    capturedOutput = io.StringIO()
+    sys.stdout = capturedOutput
+    result = func(*args)
+    sys.stdout = sys.__stdout__
+    output = capturedOutput.getvalue().strip()
+    return result, output
 
 
 def invoke_script(input_: str, script: str="main.py") -> str:
@@ -88,7 +100,13 @@ class TestFunction(unittest.TestCase):
     def test_function_call(self):
         for test in self.testcases:
             with self.subTest(call=test.callstr()):
-                result = test.func(*test.args)
+                result, output = invoke_func(test.func, test.args)
+                if test.output:
+                    self.assertIn(
+                        output,
+                        test.output + "\n",
+                        msg=f"Function output {output!r} != expected output {test.output!r}"
+                    )
                 if test.ans is not None:
                     self.assertIsNotNone(
                         result,
@@ -98,10 +116,16 @@ class TestFunction(unittest.TestCase):
                     result, type(test.ans),
                     msg=f"{test.callstr()} returned {type(result)}, expected {type(test.ans)}"
                 )
-                self.assertEqual(
-                    result, test.ans,
-                    msg=f"{test.callstr()} returned {result!r}, expected {test.ans!r}"
-                )
+                if isinstance(result, typing.Sequence):
+                    self.assertCountEqual(
+                        result, test.ans,
+                        msg=f"{test.callstr()} -> {result!r}, expected {test.ans!r}"
+                    )
+                else:
+                    self.assertEqual(
+                        result, test.ans,
+                        msg=f"{test.callstr()} -> {result!r}, expected {test.ans!r}"
+                    )
 
 
 if __name__ == '__main__':
